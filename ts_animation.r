@@ -1,4 +1,5 @@
-setwd("~/work/covid19")
+setwd("~/work/covid19/covid19_timeseries_animation")
+## set path of the directory you save this file in
 library(tidyr)
 library(tidyverse)
 library(lubridate)
@@ -11,11 +12,13 @@ library(gifski)
 ## animate 
 ##  T => render animation
 ##  F => render a plot of latest (yesterdays) snapshot
-animate <- T
+animate <- F
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
-source_data <- T
+source_data <- F
+
+yesterday <- Sys.Date() -1
 
 options(
   gganimate.nframes = 240, 
@@ -43,15 +46,25 @@ data <- d %>%
 
 
 if (!animate) {
-  at_date = Sys.Date() -1
-  data <- data %>% filter(date == at_date)
+  data <- data %>% filter(date == yesterday)
 }
 
-p <- ggplot( data = data, aes(x=days_since_0, y = total, size=(total)^0.5, color=country_region )) +
+p <- ggplot(
+  data = data, 
+  aes(x=days_since_0, y = total, size=(total)^0.5, 
+      color=country_region )
+  ) +
   geom_point() +
-  geom_text(aes(x=65, label = label, color=country_region ), hjust = 0, check_overlap = T, size=3) 
+  geom_text(
+    aes(x=65, label = label, color=country_region ), 
+    hjust = 0, check_overlap = T, size=3
+    ) 
 
-p <- p + xlim(c(0, 70)) + ylim(c(0, 90000))
+p <- p + 
+  xlab("Number of day since first report") + 
+  ylab("Number of cases (Cumulative)") +
+  xlim(c(0, 70)) + 
+  ylim(c(0, 90000)) ## Hope we dont have to increase this as the time passes. 
 
 p <- p + 
   theme_minimal() +
@@ -77,23 +90,25 @@ p <- p + scale_radius(
 
 ## Animation
 
-p <- p + labs(
-  title = 'Date: {frame_time}',
-  x = 'Number of day since first report',
-  y = 'Number of cases'
-)
+
 
 if (animate) {
+  p <- p + labs(
+    title = 'Date: {frame_time}'
+  )
   p <- p + transition_time(date) + ease_aes('cubic-in-out')
   animate(
     p,
-    # renderer=gifski_renderer(), # render gif
-    renderer=av_renderer(), # render video
+    renderer=gifski_renderer(), # render gif
+    # renderer=av_renderer(), # render video
     res=150,
     height = 720,
     width = 1280
     )
 } else {
+  p <- p + labs(
+    title = paste('Date:', yesterday)
+  )
   print(p)
 }
 
