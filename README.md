@@ -15,7 +15,7 @@ https://github.com/CSSEGISandData/COVID-19
 4. Run the script
 
 ### Animation output as on 21st march 2019
-![Output Animation](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/file3e1326f49b93.gif)
+![Output Animation](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.gif)
 
 ### Plot output as on 21st march 2019
-![Output Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/Rplot.jpeg) 
+![Output Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.jpeg) 
