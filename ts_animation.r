@@ -115,9 +115,9 @@ if (animate) {
     p,
     renderer=gifski_renderer(loop=F), # render gif
     # renderer=av_renderer(), # render video
-    res=150,
-    height = 720,
-    width = 1280
+    res=100,
+    height = 480,
+    width = 720
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
 } else {
