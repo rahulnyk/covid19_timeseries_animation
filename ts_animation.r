@@ -12,7 +12,7 @@ library(gifski)
 ## animate 
 ##  T => render animation
 ##  F => render a plot of latest (yesterdays) snapshot
-animate <- T
+animate <- F
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
@@ -124,7 +124,7 @@ if (animate) {
   p <- p + labs(
     title = paste('Date:', yesterday)
   )
-  ggsave("output.jpg", p, device = "jpeg", dpi = 150, width = 12.8, height = 7.2)
+  ggsave("output.jpg", p, device = "jpeg", dpi = 150, width = 8, height = 5)
   print(p)
 }
 
