@@ -16,7 +16,7 @@ animate <- F
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
-source_data <- F
+source_data <- T
 
 yesterday <- Sys.Date() -1
 
@@ -115,16 +115,16 @@ if (animate) {
     p,
     renderer=gifski_renderer(loop=F), # render gif
     # renderer=av_renderer(), # render video
-    res=100,
-    height = 480,
-    width = 720
+    res=150,
+    height = 720,
+    width = 1280
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
 } else {
   p <- p + labs(
     title = paste('Date:', yesterday)
   )
-  ggsave("output.jpg", p, device = "jpeg", dpi = 150, width = 8, height = 5)
+  ggsave("output.jpeg", p, device = "jpeg", dpi = 150, width = 8, height = 5)
   print(p)
 }
 
