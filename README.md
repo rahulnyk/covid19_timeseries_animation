@@ -14,8 +14,8 @@ https://github.com/CSSEGISandData/COVID-19
 4. Change `source_data` to `T` if you want to build the dataframe from source data.
 4. Run the script
 
-### Animation output as on 21st march 2019
+### Animation output
 ![Output Animation](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.gif)
 
-### Plot output as on 21st march 2019
+### Plot output
 ![Output Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.jpeg) 
