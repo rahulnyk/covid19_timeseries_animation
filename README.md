@@ -18,4 +18,7 @@ https://github.com/CSSEGISandData/COVID-19
 ![Output Animation](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.gif)
 
 ### Plot output
-![Output Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.jpeg) 
+![Output Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/output.jpeg)
+
+### Growth Rate plot 
+![Growth Rate Plot](https://github.com/rahulnyk/covid19_timeseries_animation/blob/master/gr_output.jpeg) 

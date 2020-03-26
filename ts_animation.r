@@ -12,7 +12,7 @@ library(gifski)
 ## animate 
 ##  T => render animation
 ##  F => render a plot of latest (yesterdays) snapshot
-animate <- F
+animate <- T
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
@@ -28,7 +28,7 @@ options(
 if (T) {
   jhu_url <- paste("https://raw.githubusercontent.com/CSSEGISandData/", 
                    "COVID-19/master/csse_covid_19_data/", "csse_covid_19_time_series/", 
-                   "time_series_19-covid-Confirmed.csv", sep = "")
+                   "time_series_covid19_confirmed_global.csv", sep = "")
   d <- read_csv(jhu_url)
 }
 
@@ -36,7 +36,12 @@ data <- d %>%
   rename(province = "Province/State", country_region = "Country/Region") %>% 
   pivot_longer(-c(province, country_region, Lat, Long), names_to = "Date", values_to = "total")  %>% 
   mutate(date = mdy(Date))%>% mutate(day = as.integer(strftime(date, format = "%j")) ) %>%
-  filter(total != 0) %>% 
+  filter(total != 0) %>% select(province, country_region, date, day, total) 
+
+d_total <- data %>% group_by(date, day) %>% summarize(total = sum(total)) %>%
+  mutate(province = "World", country_region = "Global") %>% ungroup()
+
+data <- rbind(data, d_total) %>%
   ## calculate the number of days since first case for each country
   group_by(country_region) %>% mutate( days_since_0 = day - min(day)  ) %>% ungroup() %>%
   ## Calculate total cases per country by summing provinces
@@ -52,7 +57,7 @@ x_max <- max(data$days_since_0)
 x_label <- x_max + 20
 labels <- data %>% 
   filter(date == yesterday) %>% 
-  arrange( total ) %>% filter( (max_cases > 2000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
+  arrange( total ) %>% filter( (max_cases > 5000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
   mutate(yend = ( 2^(  (log2(y_max)/(n()) )*row_number()  ))) %>%
   select(country_region, yend)
 
@@ -85,11 +90,11 @@ p <- p +
 p <- p + 
   theme_minimal() +
   theme(
-    axis.text=element_text(size=10, color = "darkgrey"), 
-    axis.title=element_text(size=12)
+    axis.text=element_text(size=8, color = "darkgrey"), 
+    axis.title=element_text(size=10)
     ) + 
   theme( legend.position = 'off' ) + 
-  theme( plot.title = element_text(size = 16, hjust = 0.5) ) + 
+  theme( plot.title = element_text(size = 12, hjust = 0.5) ) + 
   theme(panel.grid.minor = element_blank()) +
   theme(panel.grid.major = element_blank()) + 
   theme(plot.margin = margin(10, 50, 10, 10)) + 
@@ -124,7 +129,7 @@ if (animate) {
   p <- p + labs(
     title = paste('Date:', yesterday)
   )
-  ggsave("output.jpeg", p, device = "jpeg", dpi = 150, width = 6.4, height = 3.6)
+  ggsave("output.jpeg", p, device = "jpeg", dpi = 350, width = 10, height = 6 )
   print(p)
 }
 
