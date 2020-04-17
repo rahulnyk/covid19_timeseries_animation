@@ -121,9 +121,9 @@ if (animate) {
     p,
     renderer=gifski_renderer(loop=T), # render gif
     # renderer=av_renderer(), # render video
-    res=200,
+    res=120,
     height = 800,
-    width = 800,
+    width = 1200,
     end_pause = 30
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
