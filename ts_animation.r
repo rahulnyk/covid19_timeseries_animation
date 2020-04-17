@@ -21,7 +21,7 @@ source_data <- T
 yesterday <- Sys.Date() -1
 
 options(
-  gganimate.nframes = 100, 
+  gganimate.nframes = 150, 
   gganimate.fps=10
 )
 
@@ -49,7 +49,7 @@ data <- rbind(data, d_total) %>%
   group_by(country_region) %>% 
   mutate( max_cases = max(total)) %>% 
   ungroup() %>%
-  filter( (max_cases > 10) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
+  filter( (max_cases > 50) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
   mutate(label = paste(total, country_region, sep=" | ") )
 
 y_max <- max(data$total)
@@ -57,8 +57,8 @@ x_max <- max(data$days_since_0)
 x_label <- x_max + 20
 labels <- data %>% 
   filter(date == yesterday) %>% 
-  arrange( total ) %>% filter( (max_cases > 5000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
-  mutate(yend = ( 2^(  (log2(y_max)/(n()) )*row_number()  ))) %>%
+  arrange( total ) %>% filter( (max_cases > 10000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
+  mutate(yend = ( 2^( (log2(y_max)/(n()) )*row_number() ))) %>%
   select(country_region, yend)
 
 data <- left_join(data, labels, by = c("country_region") )
@@ -69,17 +69,18 @@ if (!animate) {
 
 p <- ggplot(
   data = data, 
-  aes(x=days_since_0, y = total, size=(total)^0.5, 
-      color=country_region )
+  aes(x=days_since_0, y = total, size=(total)^0.3, 
+      fill=country_region )
   ) +
-  geom_point() +
-  geom_line(size = 0.3, alpha=0.4)  +
+  geom_line(aes(color = country_region), size = 0.3, alpha=0.1)  +
+  geom_point(shape = 21, color = 'white') +
   geom_label(
     aes(x=x_label, y = yend, label = label, fill=country_region),
-    color='white', fontface = "bold",
-    hjust = 0, size=3
+    color='white',
+    hjust = 0, 
+    size=3
   ) + 
-  geom_segment(aes(xend = x_label, yend = yend), linetype = "11", size=0.4, alpha=0.4)
+  geom_segment(aes(xend = x_label, yend = yend, color=country_region), linetype = "11", size=0.2, alpha=0.3)
 
 p <- p + 
   scale_y_continuous(trans = 'log2', limits = c(1, y_max*2)) +
@@ -93,8 +94,8 @@ p <- p +
     axis.text=element_text(size=8, color = "darkgrey"), 
     axis.title=element_text(size=10)
     ) + 
-  theme( legend.position = 'off' ) + 
-  theme( plot.title = element_text(size = 12, hjust = 0.5) ) + 
+  theme(legend.position = 'off') + 
+  theme(plot.title = element_text(size = 12, hjust = 0.5) ) + 
   theme(panel.grid.minor = element_blank()) +
   theme(panel.grid.major = element_blank()) + 
   theme(plot.margin = margin(10, 50, 10, 10)) + 
@@ -103,7 +104,7 @@ p <- p +
   scale_fill_viridis_d(option="inferno", begin = 0, end = 0.9)
 
 p <- p + scale_radius(
-  range = c(1, 10),
+  range = c(1, 14),
   trans = "identity",
   guide = "legend"
 )
@@ -118,11 +119,12 @@ if (animate) {
     transition_reveal(date)
   animate(
     p,
-    renderer=gifski_renderer(loop=F), # render gif
+    renderer=gifski_renderer(loop=T), # render gif
     # renderer=av_renderer(), # render video
     res=150,
-    height = 720,
-    width = 1280
+    height = 1000,
+    width = 1000,
+    end_pause = 30
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
 } else {
