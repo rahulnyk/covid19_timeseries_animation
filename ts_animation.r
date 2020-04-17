@@ -49,7 +49,7 @@ data <- rbind(data, d_total) %>%
   group_by(country_region) %>% 
   mutate( max_cases = max(total)) %>% 
   ungroup() %>%
-  filter( (max_cases > 50) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
+  filter( (max_cases > 10) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
   mutate(label = paste(total, country_region, sep=" | ") )
 
 y_max <- max(data$total)
@@ -57,7 +57,7 @@ x_max <- max(data$days_since_0)
 x_label <- x_max + 20
 labels <- data %>% 
   filter(date == yesterday) %>% 
-  arrange( total ) %>% filter( (max_cases > 10000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
+  arrange( total ) %>% filter( (max_cases > 12000) | (country_region %in% c("India", "Pakistan", "Bangladesh", "Sri Lanka", "Nepal") ) ) %>%
   mutate(yend = ( 2^( (log2(y_max)/(n()) )*row_number() ))) %>%
   select(country_region, yend)
 
@@ -121,9 +121,9 @@ if (animate) {
     p,
     renderer=gifski_renderer(loop=T), # render gif
     # renderer=av_renderer(), # render video
-    res=150,
-    height = 1000,
-    width = 1000,
+    res=200,
+    height = 800,
+    width = 800,
     end_pause = 30
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
