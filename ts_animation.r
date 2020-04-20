@@ -12,7 +12,7 @@ library(gifski)
 ## animate 
 ##  T => render animation
 ##  F => render a plot of latest (yesterdays) snapshot
-animate <- T
+animate <- F
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
