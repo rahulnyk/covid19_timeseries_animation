@@ -12,7 +12,7 @@ library(gifski)
 ## animate 
 ##  T => render animation
 ##  F => render a plot of latest (yesterdays) snapshot
-animate <- F
+animate <- T
 ## source_data: set to true if you want to recreate the dataframe
 ##  T => download the data from the data repo
 ##  F => Use data from the global environment
@@ -124,7 +124,7 @@ if (animate) {
     res=120,
     height = 800,
     width = 1200,
-    end_pause = 30
+    end_pause = 40
     )
   anim_save(paste("output", ".gif", sep="" ), animation = last_animation())
 } else {
